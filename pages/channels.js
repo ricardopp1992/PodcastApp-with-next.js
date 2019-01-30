@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Error from './_error'
 import PodcastWithClick from '../components/podcastWithClick'
 import PodcastPlayer from '../components/PodcastPlayer';
+import ChannelGrid from '../components/ChannelGrid'
 
 export default class extends React.Component {
     
@@ -80,25 +81,34 @@ export default class extends React.Component {
 
         return (
             <div>
-                <header> Podcasts </header>
+                <header> {channel.title} </header>
+
+                <img className="banner" src={channel.urls.banner_image.original}></img>
                 
                 {
-                    this.state.openPodcast && 
+                    openPodcast && 
                     <div className="modal">
                         <PodcastPlayer 
-                            clip={ this.state.openPodcast }
+                            clip={ openPodcast }
                             onClose={ this.closePodcast } />
                     </div>
                 }
                 <h1>{ channel.title }</h1>
 
-                {
-                    audios.map((clip, i) => (
-                        <Link href={`/podcast?idAudio=${ clip.id }`}>
-                            <a>{clip.title}</a>
-                        </Link>
-                    ))
-                }
+                <div className="channels">
+                    {
+
+                        audios.map((clip, i) => (
+                            <Link href={`/podcast?idAudio=${ clip.id }`}>
+                                <a className="channel">
+                                    <img src={clip.urls.image} alt="imagen" />
+                                    <p>{clip.title}</p>
+                                </a>
+                            </Link>
+                        ))
+                    }
+                </div>
+
                 <h1>Sub-series</h1>
                 {
                     (series.length !== 0) ?
@@ -121,12 +131,23 @@ export default class extends React.Component {
                         padding: 15px;
                         text-align: center;
                     }
+                    .banner{
+                        width:100%;
+                        height:30vh;
+                    }
                     .channels {
                         display: grid;
                         grid-gap: 15px;
                         padding: 15px;
                         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                     }
+                    a.channel {
+                        display: block;
+                        margin-bottom: 0.5em;
+                        color: #333;
+                        text-decoration: none;
+                        text-align:center;
+                    }                    
                     a {
                         display: block;
                         margin-bottom: 0.5em;
